@@ -1,20 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fusspflege Protokoll Tracker</title>
+    <title>Fusspflege Protokoll</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="modal">
-        <h2>Tracker Modal</h2>
-        <form id="trackerForm">
-            <label for="entry">New Entry:</label>
-            <input type="text" id="entry" required>
-            <button type="submit">Add</button>
-        </form>
+    <div class="sidebar">
+        <h2>Menü</h2>
+        <ul>
+            <li><a href="#">Startseite</a></li>
+            <li><a href="#">Protokoll</a></li>
+            <li><a href="#">Berichte</a></li>
+            <li><a href="#">Einstellungen</a></li>
+        </ul>
     </div>
-    <script src="script.js"></script>
+    <div class="main-content">
+        <header>
+            <h1>Fusspflege Protokoll</h1>
+        </header>
+        <section>
+            <h2>Eingaben</h2>
+            <form id="inputForm">
+                <label for="patientName">Patientenname:</label>
+                <input type="text" id="patientName" required>
+                <label for="treatmentDate">Behandlungsdatum:</label>
+                <input type="date" id="treatmentDate" required>
+                <input type="submit" value="Hinzufügen">
+            </form>
+        </section>
+        <section id="chartSection">
+            <h2>Behandlungsverlauf</h2>
+            <canvas id="treatmentChart"></canvas>
+        </section>
+        <div id="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Zusätzliche Informationen</h2>
+                <p>Details zur Behandlung.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2026 Fusspflege Protokoll</p>
+    </footer>
 </body>
 </html>
