@@ -1,51 +1,98 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fusspflege Protokoll</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fusspflege Protokoll</title>
+<style>
+:root{--ink:#0c0c10;--ink2:#111118;--text:#eeeef8;--lime:#b8ff47;--wire:#252532;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--ink);color:var(--text);font-family:Arial,sans-serif}
+.shell{display:grid;grid-template-columns:64px 1fr;min-height:100vh}
+.sidebar{background:var(--ink2);padding:20px 0;text-align:center}
+.logo{font-size:32px;margin-bottom:20px}
+.content{padding:30px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--wire)}
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px}
+.card{background:var(--ink2);padding:20px;border-radius:10px;cursor:pointer;border:1px solid var(--wire)}
+.card:hover{border-color:var(--lime)}
+.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.9)}
+.modal-content{background:var(--ink2);margin:5% auto;padding:30px;width:80%;max-width:500px;border-radius:10px}
+.close{float:right;font-size:28px;cursor:pointer}
+button{background:var(--lime);color:var(--ink);padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-weight:bold}
+button:hover{opacity:0.8}
+input,textarea{width:100%;padding:10px;margin:10px 0;background:var(--ink);color:var(--text);border:1px solid var(--wire);border-radius:5px}
+.btn{background:var(--lime);color:var(--ink);padding:10px 20px;border:none;border-radius:5px;cursor:pointer}
+</style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Menü</h2>
-        <ul>
-            <li><a href="#">Startseite</a></li>
-            <li><a href="#">Protokoll</a></li>
-            <li><a href="#">Berichte</a></li>
-            <li><a href="#">Einstellungen</a></li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <header>
-            <h1>Fusspflege Protokoll</h1>
-        </header>
-        <section>
-            <h2>Eingaben</h2>
-            <form id="inputForm">
-                <label for="patientName">Patientenname:</label>
-                <input type="text" id="patientName" required>
-                <label for="treatmentDate">Behandlungsdatum:</label>
-                <input type="date" id="treatmentDate" required>
-                <input type="submit" value="Hinzufügen">
-            </form>
-        </section>
-        <section id="chartSection">
-            <h2>Behandlungsverlauf</h2>
-            <canvas id="treatmentChart"></canvas>
-        </section>
-        <div id="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2>Zusätzliche Informationen</h2>
-                <p>Details zur Behandlung.</p>
-            </div>
-        </div>
-    </div>
-    <footer>
-        <p>&copy; 2026 Fusspflege Protokoll</p>
-    </footer>
+<div class="shell">
+<div class="sidebar"><div class="logo">🦶</div></div>
+<div class="content">
+<div class="topbar"><h1>Fusspflege Protokoll</h1><div id="stats">0/9</div></div>
+<div class="day-grid" id="dayGrid"></div>
+<button onclick="openModal()">+ Новий запис</button>
+</div>
+</div>
+
+<div id="modal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">&times;</span>
+<h2>Новий запис</h2>
+<label>День:</label>
+<input type="text" id="dayInput">
+<label>Дата:</label>
+<input type="date" id="dateInput">
+<label>Нотатка:</label>
+<textarea id="noteInput" rows="4"></textarea>
+<label>Процедура:</label>
+<select id="procedureSelect">
+<option>Fussbad</option>
+<option>Massage</option>
+<option>Creme/Öl</option>
+<option>Vitaparcour</option>
+</select>
+<br><button onclick="saveEntry()">Зберегти</button>
+</div>
+</div>
+
+<script>
+let entries = JSON.parse(localStorage.getItem('entries')) || [];
+const days = ['Montag', 'Mittwoch', 'Freitag'];
+
+function render() {
+  const grid = document.getElementById('dayGrid');
+  grid.innerHTML = '';
+  days.forEach((day, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const e = entries[idx];
+    card.innerHTML = `<h3>${day}</h3><p>${e ? e.note : 'Keine Einträge'}</p>`;
+    card.onclick = () => openModal(idx);
+    grid.appendChild(card);
+  });
+  document.getElementById('stats').textContent = `${entries.length}/9`;
+}
+
+function openModal(idx = 0) {
+  document.getElementById('modal').style.display = 'block';
+  window.currentIdx = idx;
+}
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function saveEntry() {
+  const note = document.getElementById('noteInput').value;
+  const procedure = document.getElementById('procedureSelect').value;
+  entries[window.currentIdx] = { note, procedure, date: new Date().toISOString() };
+  localStorage.setItem('entries', JSON.stringify(entries));
+  closeModal();
+  render();
+}
+
+render();
+</script>
 </body>
 </html>
