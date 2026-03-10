@@ -4,94 +4,67 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fusspflege Protokoll</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#0c0c10;--ink2:#111118;--text:#eeeef8;--lime:#b8ff47;--wire:#252532;}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--ink);color:var(--text);font-family:Arial,sans-serif}
-.shell{display:grid;grid-template-columns:64px 1fr;min-height:100vh}
-.sidebar{background:var(--ink2);padding:20px 0;text-align:center}
-.logo{font-size:32px;margin-bottom:20px}
-.content{padding:30px}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid var(--wire)}
-.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:30px}
-.card{background:var(--ink2);padding:20px;border-radius:10px;cursor:pointer;border:1px solid var(--wire)}
-.card:hover{border-color:var(--lime)}
-.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.9)}
-.modal-content{background:var(--ink2);margin:5% auto;padding:30px;width:80%;max-width:500px;border-radius:10px}
-.close{float:right;font-size:28px;cursor:pointer}
-button{background:var(--lime);color:var(--ink);padding:10px 20px;border:none;border-radius:5px;cursor:pointer;font-weight:bold}
-button:hover{opacity:0.8}
-input,textarea{width:100%;padding:10px;margin:10px 0;background:var(--ink);color:var(--text);border:1px solid var(--wire);border-radius:5px}
-.btn{background:var(--lime);color:var(--ink);padding:10px 20px;border:none;border-radius:5px;cursor:pointer}
+:root{--ink:#0c0c10;--ink2:#111118;--ink3:#18181f;--ink4:#1e1e28;--wire:#252532;--dim:#32324a;--mid:#4a4a6a;--ghost:#606088;--prose:#b8b8d8;--text:#eeeef8;--lime:#b8ff47;--teal:#2dd4bf;--blush:#f472b6;--amber:#fbbf24;--violet:#a78bfa;--r:10px;--ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);}
+*{box-sizing:border-box;margin:0;padding:0}html{-webkit-font-smoothing:antialiased}body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--ink)}::-webkit-scrollbar-thumb{background:var(--wire);border-radius:2px}
+.shell{display:grid;grid-template-columns:64px 1fr;min-height:100vh}.sidebar{background:var(--ink2);border-right:1px solid var(--wire);display:flex;flex-direction:column;align-items:center;padding:20px 0 18px;position:sticky;top:0;height:100vh;z-index:20}.sb-logo{width:32px;height:32px;background:var(--lime);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:20px}.sb-nav{display:flex;flex-direction:column;gap:2px;width:100%;padding:0 8px;flex:1}.st{width:100%;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;background:transparent;transition:background .2s;position:relative;font-size:16px}.st:hover{background:var(--ink3)}.st.active{background:var(--ink3)}.st.active::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--lime);border-radius:2px}
+.content{display:flex;flex-direction:column;min-height:100vh}.topbar{padding:16px 30px 14px;border-bottom:1px solid var(--wire);display:flex;justify-content:space-between;align-items:center;background:var(--ink);position:sticky;top:0;z-index:9;gap:14px}.tb-title{font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;letter-spacing:-.02em}.tb-title em{font-style:italic;color:var(--lime)}.tb-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.prog-ring{position:relative;width:38px;height:38px}.prog-ring svg{transform:rotate(-90deg)}.pr-bg{fill:none;stroke:var(--dim);stroke-width:3}.pr-fill{fill:none;stroke:var(--lime);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1.4s var(--spring)}.pr-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:var(--ghost)}.pt-val{font-size:17px;font-weight:600;line-height:1}.pt-sub{font-size:9px;color:var(--ghost);letter-spacing:.08em;text-transform:uppercase}
+.view{display:none;flex:1}.view.active{display:block}.pad{padding:26px 30px 48px}
+.wk-banner{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}.wk-big{font-family:'Libre Baskerville',serif;font-size:60px;font-weight:700;line-height:1;color:var(--wire);letter-spacing:-.04em;user-select:none;transition:color .3s}.wk-big.lit{color:var(--dim)}.wk-dates{font-family:'Libre Baskerville',serif;font-size:13px;color:var(--prose)}
+.day-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:30px}.dcard{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .22s var(--ease);position:relative;overflow:hidden;min-height:140px;display:flex;flex-direction:column;opacity:0;animation:fadeUp .4s var(--ease) forwards}.dcard:nth-child(1){animation-delay:.04s}.dcard:nth-child(2){animation-delay:.1s}.dcard:nth-child(3){animation-delay:.16s}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.dcard:hover{border-color:var(--dim);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.5)}.dcard.done{border-color:rgba(184,255,71,.22)}.dcard.done::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--lime)}.dc-check{position:absolute;top:13px;right:13px;width:17px;height:17px;border-radius:50%;background:var(--lime);display:none;align-items:center;justify-content:center;font-size:9px;color:var(--ink);font-weight:900}.dcard.done .dc-check{display:flex}.dc-day{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ghost);margin-bottom:4px}.dc-date{font-family:'Libre Baskerville',serif;font-size:15px;color:var(--text);margin-bottom:8px}.dc-body{flex:1;font-size:11px;color:var(--ghost);line-height:1.6}
+.overlay{display:none;position:fixed;inset:0;background:rgba(6,6,12,.9);z-index:100;align-items:center;justify-content:center;backdrop-filter:blur(14px)}.overlay.open{display:flex}.modal{background:var(--ink2);border:1px solid var(--dim);border-radius:16px;width:94%;max-width:580px;max-height:92vh;overflow-y:auto;animation:su .3s var(--spring);box-shadow:0 32px 80px rgba(0,0,0,.85)}@keyframes su{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}.mhd{padding:22px 22px 0;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.mh-date{font-family:'Libre Baskerville',serif;font-size:17px;color:var(--text)}.mclose{width:28px;height:28px;border-radius:50%;background:var(--ink3);border:1px solid var(--wire);color:var(--ghost);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}.mclose:hover{background:var(--ink);color:var(--text)}.mbody{padding:0 22px 22px}
+.flabel{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ghost);display:block;margin-bottom:8px}.fgroup{margin-bottom:16px}.fi{width:100%;background:var(--ink3);border:1px solid var(--wire);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;outline:none;resize:vertical;transition:border-color .2s}.fi:focus{border-color:var(--dim)}.fi::placeholder{color:var(--mid)}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:20px}.ptog{padding:12px 6px;background:var(--ink3);border:1px solid var(--wire);border-radius:10px;text-align:center;cursor:pointer;transition:all .22s var(--ease);user-select:none;position:relative}.ptog:hover{border-color:var(--dim)}.ptog-icon{font-size:22px;margin-bottom:4px}.ptog-name{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ghost);transition:color .2s;line-height:1.3}.ptog.on{border-color:rgba(184,255,71,.4);background:rgba(184,255,71,.06)}.ptog.on .ptog-name{color:var(--lime)}.ptog.on::after{content:'✓';position:absolute;top:5px;right:6px;font-size:9px;color:var(--lime);font-weight:900}
+.btn{padding:9px 18px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.05em;cursor:pointer;border:none;transition:all .2s var(--ease)}.btn-lime{background:var(--lime);color:var(--ink)}.btn-lime:hover{box-shadow:0 0 18px rgba(184,255,71,.35);transform:translateY(-1px)}.btn-ghost{background:transparent;color:var(--ghost);border:1px solid var(--wire)}.btn-ghost:hover{border-color:var(--dim);color:var(--prose)}
+.media-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:10px}.mp-item{position:relative;border-radius:6px;overflow:hidden;aspect-ratio:1;background:var(--ink3);cursor:pointer}.mp-item img,.mp-item video{width:100%;height:100%;object-fit:cover}.mp-del{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}.mp-del:hover{background:var(--blush)}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--wire);padding-top:14px;margin-top:6px}
+@media(max-width:680px){.shell{grid-template-columns:1fr}.sidebar{display:none}.pad{padding:18px 16px 40px}.day-grid{grid-template-columns:1fr}.proc-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="shell">
-<div class="sidebar"><div class="logo">🦶</div></div>
+<aside class="sidebar"><div class="sb-logo">🦶</div><div class="sb-nav"><button class="st active" onclick="showView('tagebuch')">📋</button><button class="st" onclick="showView('progress')">📊</button></div></aside>
 <div class="content">
-<div class="topbar"><h1>Fusspflege Protokoll</h1><div id="stats">0/9</div></div>
-<div class="day-grid" id="dayGrid"></div>
-<button onclick="openModal()">+ Новий запис</button>
+<header class="topbar"><div><div class="tb-title">Fusspflege <em>Protokoll</em></div></div><div class="tb-right"><div class="prog-ring"><svg width="38" height="38" viewBox="0 0 38 38"><circle class="pr-bg" cx="19" cy="19" r="15"/><circle class="pr-fill" id="prFill" cx="19" cy="19" r="15" stroke-dasharray="94.25" stroke-dashoffset="94.25"/></svg><div class="pr-lbl" id="prLbl">0%</div></div><div><div class="pt-val" id="ptVal">0/9</div><div class="pt-sub">Einträge</div></div></div></header>
+<div class="view active" id="view-tagebuch"><div class="pad"><div class="wk-banner"><div class="wk-big" id="wkBig">01</div><div><div class="wk-dates" id="wkDates">02.–08. März 2026</div></div></div><div class="day-grid" id="dayGrid"></div></div></div>
+<div class="view" id="view-progress"><div class="pad"><div id="overview">Noch keine Daten</div></div></div>
 </div>
 </div>
 
-<div id="modal" class="modal">
-<div class="modal-content">
-<span class="close" onclick="closeModal()">&times;</span>
-<h2>Новий запис</h2>
-<label>День:</label>
-<input type="text" id="dayInput">
-<label>Дата:</label>
-<input type="date" id="dateInput">
-<label>Нотатка:</label>
-<textarea id="noteInput" rows="4"></textarea>
-<label>Процедура:</label>
-<select id="procedureSelect">
-<option>Fussbad</option>
-<option>Massage</option>
-<option>Creme/Öl</option>
-<option>Vitaparcour</option>
-</select>
-<br><button onclick="saveEntry()">Зберегти</button>
+<div class="overlay" id="overlay" onclick="closeOut(event)">
+<div class="modal"><div class="mhd"><div><div class="mh-date" id="mDate">—</div></div><button class="mclose" onclick="closeModal()">✕</button></div>
+<div class="mbody">
+<label class="flabel">Massnahme</label>
+<div class="proc-grid">
+<div class="ptog" id="pr-bad" onclick="toggleProc('bad')"><div class="ptog-icon">🛁</div><div class="ptog-name">Fussbad</div></div>
+<div class="ptog" id="pr-massage" onclick="toggleProc('massage')"><div class="ptog-icon">👐</div><div class="ptog-name">Massage</div></div>
+<div class="ptog" id="pr-pflege" onclick="toggleProc('pflege')"><div class="ptog-icon">🧴</div><div class="ptog-name">Creme/Öl</div></div>
+<div class="ptog" id="pr-vita" onclick="toggleProc('vita')"><div class="ptog-icon">🌿</div><div class="ptog-name">Vitaparcour</div></div>
+</div>
+<div class="fgroup"><label class="flabel">Notiz</label><textarea class="fi" id="inp-note" placeholder="Beobachtungen..."></textarea></div>
+<div class="fgroup"><label class="flabel">Medien</label><div class="media-grid" id="mediaPreview"></div></div>
+<div class="mfooter"><button class="btn btn-ghost" onclick="closeModal()">Abbrechen</button><button class="btn btn-lime" onclick="saveEntry()">Speichern</button></div>
+</div>
 </div>
 </div>
 
 <script>
-let entries = JSON.parse(localStorage.getItem('entries')) || [];
-const days = ['Montag', 'Mittwoch', 'Freitag'];
-
-function render() {
-  const grid = document.getElementById('dayGrid');
-  grid.innerHTML = '';
-  days.forEach((day, idx) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    const e = entries[idx];
-    card.innerHTML = `<h3>${day}</h3><p>${e ? e.note : 'Keine Einträge'}</p>`;
-    card.onclick = () => openModal(idx);
-    grid.appendChild(card);
-  });
-  document.getElementById('stats').textContent = `${entries.length}/9`;
-}
-
-function openModal(idx = 0) {
-  document.getElementById('modal').style.display = 'block';
-  window.currentIdx = idx;
-}
-
-function closeModal() {
-  document.getElementById('modal').style.display = 'none';
-}
-
-function saveEntry() {
-  const note = document.getElementById('noteInput').value;
-  const procedure = document.getElementById('procedureSelect').value;
-  entries[window.currentIdx] = { note, procedure, date: new Date().toISOString() };
-  localStorage.setItem('entries', JSON.stringify(entries));
-  closeModal();
-  render();
-}
-
+const WEEKS=[{num:'01',dates:'02.–08. März 2026',days:[{d:'Montag',dt:'02.03.'},{d:'Mittwoch',dt:'04.03.'},{d:'Freitag',dt:'06.03.'}]},{num:'02',dates:'09.–15. März 2026',days:[{d:'Montag',dt:'09.03.'},{d:'Mittwoch',dt:'11.03.'},{d:'Freitag',dt:'13.03.'}]},{num:'03',dates:'16.–22. März 2026',days:[{d:'Montag',dt:'16.03.'},{d:'Mittwoch',dt:'18.03.'},{d:'Freitag',dt:'20.03.'}]}];
+let S=(()=>{try{const s=localStorage.getItem('fp_data');return s?JSON.parse(s):{entries:{},fazit:''}}catch{return{entries:{},fazit:''}}})();
+let cw=0,ek=null,procs={};
+const $=id=>document.getElementById(id);
+function persist(){try{localStorage.setItem('fp_data',JSON.stringify(S))}catch{}}
+function ekey(w,d){return`w${w}_d${d}`}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.querySelectorAll('.st').forEach(b=>b.classList.remove('active'));$('view-'+id).classList.add('active');document.querySelectorAll('.st')[id==='tagebuch'?0:1].classList.add('active');}
+function render(){const wk=WEEKS[cw];$('wkBig').textContent=wk.num;$('wkDates').textContent=wk.dates;const grid=$('dayGrid');grid.innerHTML='';wk.days.forEach((day,di)=>{const k=ekey(cw,di),e=S.entries[k];const card=document.createElement('div');card.className='dcard'+(e?' done':' empty');card.onclick=()=>openModal(cw,di);const chk=document.createElement('div');chk.className='dc-check';chk.textContent='✓';const dl=document.createElement('div');dl.className='dc-day';dl.textContent=day.d;const dt=document.createElement('div');dt.className='dc-date';dt.textContent=day.dt+' März';const bod=document.createElement('div');bod.className='dc-body';card.appendChild(chk);card.appendChild(dl);card.appendChild(dt);if(e){bod.textContent=e.note||'Запис';card.appendChild(bod);}else{bod.textContent='Натисніть, щоб додати →';card.appendChild(bod);}grid.appendChild(card);});updateStats();}
+function updateStats(){const done=Object.keys(S.entries).length,pct=Math.round((done/9)*100);$('ptVal').textContent=`${done}/9`;$('prLbl').textContent=pct+'%';const circ=2*Math.PI*15;$('prFill').style.strokeDashoffset=circ-(pct/100)*circ;}
+function openModal(w,d){ek=ekey(w,d);const e=S.entries[ek]||{};const wk=WEEKS[w],day=wk.days[d];$('mDate').textContent=`${day.d}, ${day.dt} März`;$('inp-note').value=e.note||'';procs=e.procs?{...e.procs}:{};['bad','massage','pflege','vita'].forEach(p=>{$('pr-'+p).classList.toggle('on',!!procs[p]);});$('overlay').classList.add('open');}
+function closeModal(){$('overlay').classList.remove('open');ek=null;}
+function closeOut(e){if(e.target===$('overlay'))closeModal();}
+function toggleProc(p){procs[p]=!procs[p];$('pr-'+p).classList.toggle('on',!!procs[p]);}
+function saveEntry(){if(!ek)return;S.entries[ek]={note:$('inp-note').value.trim(),procs:{...procs},ts:Date.now()};persist();closeModal();render();}
 render();
 </script>
 </body>
