@@ -18,7 +18,7 @@ html{-webkit-font-smoothing:antialiased}
 body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--ink)}::-webkit-scrollbar-thumb{background:var(--wire);border-radius:2px}
 
-/* ── SHELL ────────────────────────────────────────── */
+/* ── SHELL ─���──────────────────────────────────────── */
 .shell{display:grid;grid-template-columns:64px 1fr;min-height:100vh}
 
 /* ── SIDEBAR ──────────────────────────────────────── */
@@ -92,7 +92,7 @@ body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;mi
 .dc-thumb{width:100%;height:50px;object-fit:cover;border-radius:5px;margin-top:8px;cursor:pointer}
 .dc-thumb-vid{width:100%;height:50px;border-radius:5px;margin-top:8px;display:flex;align-items:center;justify-content:center;background:var(--ink3);cursor:pointer;font-size:18px;border:1px solid var(--wire)}
 
-/* ── PROGRESS VIEW ────────────────────────────────── */
+/* ── PROGRESS VIEW ─────────────────────────────��──── */
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
 .sstat{background:var(--ink2);border:1px solid var(--wire);border-radius:var(--r);padding:14px}
 .sstat-val{font-family:'Libre Baskerville',serif;font-size:20px;font-weight:700;margin-bottom:2px}
@@ -486,7 +486,7 @@ body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;mi
     </div>
 
     <div class="mfooter">
-      <button class="btn btn-ghost" onclick="closeModal()">Schliessen</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Schlissen</button>
     </div>
   </div>
 </div>
@@ -509,8 +509,8 @@ const WEEKS=[
 ];
 const MK=['ferse','ballen','mitte','zehen','aussen','innen'];
 const MN={ferse:'Ferse',ballen:'Ballen',mitte:'Fussmitte',zehen:'Zehen',aussen:'Aussenkante',innen:'Innenkante'};
-const VK=['rindenmulch','kies','schotter','sand','holzbrett','rasen'];
-const VN={rindenmulch:'Rindenmulch',kies:'Kieselsteine',schotter:'Schotter',sand:'Sand',holzbrett:'Holzbohlen',rasen:'Rasen'};
+const VK=['rindelmulch','kies','schotter','sand','holzbrett','rasen'];
+const VN={rindelmulch:'Rindenmulch',kies:'Kieselsteine',schotter:'Schotter',sand:'Sand',holzbrett:'Holzbohlen',rasen:'Rasen'};
 
 let S={entries:{},fazit:''};
 let cw=0,ek=null;
@@ -689,7 +689,7 @@ function displayStars(elId,val){
 function closeModal(){$('overlay').classList.remove('open');ek=null;}
 function closeOut(e){if(e.target===$('overlay'))closeModal();}
 
-/* ── PROGRESS ────────────────────────────────────────── */
+/* ── PROGRESS ──────────────────────────────────────────– */
 function renderProgress(){
   renderSumStats();renderBAChart();
   renderLine('tempSVG',allE().map(({e})=>e.temp||37),28,45,'var(--amber)');
@@ -779,8 +779,7 @@ function exportToWord(){
   const blob=new Blob([html],{type:'application/msword'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  const d=new Date();
-a.download=`Tagebuch.doc`;
+  a.download='Tagebuch.doc';
   a.click();
   showToast('✓ Word-Datei exportiert','ok');
 }
@@ -794,8 +793,8 @@ function exportToPDF(){
 }
 
 function buildExportHTML(){
-  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Fusspflege Protokoll</title><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:20px}h1{color:#0c0c10;border-bottom:2px solid #b8ff47;padding-bottom:10px}h2{color:#606088;margin-top:20px;border-left:3px solid #b8ff47;padding-left:10px}table{width:100%;border-collapse:collapse;margin:15px 0}.entry-box{border:1px solid #ddd;padding:15px;margin:10px 0;border-radius:5px;background:#f9f9f9}.label{font-weight:bold;color:#0c0c10}.stars{color:#fbbf24}hr{border:none;border-top:1px solid #ddd;margin:20px 0}</style></head><body>`;
-  html+=`<h1>🦶 Fusspflege Selbstversuch — Protokoll</h1>`;
+  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Tagebuch</title><style>body{font-family:Arial,sans-serif;line-height:1.6;color:#333;margin:20px}h1{color:#0c0c10;border-bottom:2px solid #b8ff47;padding-bottom:10px}h2{color:#606088;margin-top:20px;border-left:3px solid #b8ff47;padding-left:10px}table{width:100%;border-collapse:collapse;margin:15px 0}.entry-box{border:1px solid #ddd;padding:15px;margin:10px 0;border-radius:5px;background:#f9f9f9}.label{font-weight:bold;color:#0c0c10}.stars{color:#fbbf24}hr{border:none;border-top:1px solid #ddd;margin:20px 0}</style></head><body>`;
+  html+=`<h1>🦶 Tagebuch</h1>`;
   html+=`<p><strong>Versuchsperson:</strong> Danylo Vashchuk | <strong>Zeitraum:</strong> März 2026</p>`;
   
   allE().forEach(({w,d,e})=>{
@@ -837,6 +836,14 @@ function showToast(msg,type='ok'){
   document.body.appendChild(t);
   setTimeout(()=>t.remove(),3000);
 }
+
+function openLB(m){
+  const c=$('lbContent');c.innerHTML='';
+  if(m.type==='image'){const img=document.createElement('img');img.src=m.data;c.appendChild(img);}
+  else{const vd=document.createElement('video');vd.src=m.data;vd.controls=true;vd.autoplay=true;c.appendChild(vd);}
+  $('lightbox').classList.add('open');
+}
+function closeLB(){const vd=$('lbContent').querySelector('video');if(vd){vd.pause();vd.src='';} $('lightbox').classList.remove('open');}
 
 /* ── INIT ────────────────────────────────────────────── */
 loadData();
