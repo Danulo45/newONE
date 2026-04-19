@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -341,6 +342,26 @@ body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;mi
     </div>
   </div>
 
+  <div class="bb-right">
+  <button class="btn btn-ghost bb-btn" onclick="exportToWord()">📄 Word</button>
+
+  <button class="btn btn-ghost bb-btn"
+          onclick="exportToPDF()"
+          style="color:var(--teal);border-color:rgba(45,212,191,.25)">
+    📕 PDF
+  </button>
+
+  <!-- NEW: IMPORT JSON -->
+  <button class="btn btn-ghost bb-btn" id="importJsonBtn">
+    📥 JSON Import
+  </button>
+
+  <input type="file"
+         id="jsonImport"
+         accept="application/json"
+         style="display:none;">
+</div>
+
   <div class="fazit-card">
     <label class="flabel" style="margin-bottom:10px">Fazit & Auswertung</label>
     <textarea id="fazitTA" readonly placeholder="Meine Beobachtungen über drei Wochen zeigen, dass..."></textarea>
@@ -417,7 +438,7 @@ body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;mi
       </div>
     </div>
 
-    <!-- MASSAGE INFO -->
+   <!-- MASSAGE INFO -->
     <div class="cond-section" id="sec-massage">
       <div class="cond-inner">
         <div class="cond-head"><div class="cond-head-dot" style="background:var(--violet)"></div>Selbstmassage — Bereiche</div>
@@ -502,35 +523,48 @@ body{background:var(--ink);color:var(--text);font-family:'DM Sans',sans-serif;mi
 
 <script>
 /* ── DATA ────────────────────────────────────────────── */
+
+let DATASETS = {};
+let CURRENT_DATASET = "default";
+let S = {entries:{},fazit:''};
+
 const WEEKS=[
   {kw:'KW 10',num:'01',dates:'02.–08. März 2026',days:[{d:'Montag',dt:'02.03.'},{d:'Mittwoch',dt:'04.03.'},{d:'Freitag',dt:'06.03.'}]},
   {kw:'KW 11',num:'02',dates:'09.–15. März 2026',days:[{d:'Montag',dt:'09.03.'},{d:'Mittwoch',dt:'11.03.'},{d:'Freitag',dt:'13.03.'}]},
   {kw:'KW 12',num:'03',dates:'16.–22. März 2026',days:[{d:'Montag',dt:'16.03.'},{d:'Mittwoch',dt:'18.03.'},{d:'Freitag',dt:'20.03.'}]},
 ];
+
 const MK=['ferse','ballen','mitte','zehen','aussen','innen'];
 const MN={ferse:'Ferse',ballen:'Ballen',mitte:'Fussmitte',zehen:'Zehen',aussen:'Aussenkante',innen:'Innenkante'};
+
 const VK=['rindelmulch','kies','schotter','sand','holzbrett','rasen'];
 const VN={rindelmulch:'Rindenmulch',kies:'Kieselsteine',schotter:'Schotter',sand:'Sand',holzbrett:'Holzbohlen',rasen:'Rasen'};
 
-let S={entries:{},fazit:''};
-let cw=0,ek=null;
-const $=id=>document.getElementById(id);
+let cw=0, ek=null;
+const $ = id => document.getElementById(id);
 
-// Load JSON from GitHub
+/* ── LOAD JSON ───────────────────────────────────────── */
+
 async function loadData(){
   try{
-    const res=await fetch('FP_BACKUP_20.03.26.json');
+    const res = await fetch('FP_BACKUP_20.03.26.json');
     if(!res.ok) throw new Error('JSON nicht gefunden');
-    S=await res.json();
+
+    const json = await res.json();
+
+    // init dataset system
+    DATASETS["default"] = json;
+    CURRENT_DATASET = "default";
+    S = json;
+
+    buildDatasetSwitcher();
     render();
+
   }catch(err){
-    console.error('Fehler beim Laden der Daten:',err);
+    console.error('Fehler beim Laden der Daten:', err);
     showToast('✗ Daten konnten nicht geladen werden','err');
   }
 }
-
-function ekey(w,d){return`w${w}_d${d}`}
-
 /* ── SIDEBAR ─────────────────────────────────────────── */
 function buildSB(){
   const c=$('sbWeeks');c.innerHTML='';
@@ -593,8 +627,8 @@ function avg2(o){if(!o)return 0;return((o.haut||0)+(o.wohl||0))/2}
 /* ── STATS ───────────────────────────────────────────── */
 function updateStats(){
   const done=Object.keys(S.entries).length,pct=Math.round((done/9)*100);
-  $('ptVal').textContent=`${done}/9`;$('prLbl').textContent=pct+'%';
-  const circ=2*Math.PI*15;$('prFill').style.strokeDashoffset=circ-(pct/100)*circ;
+  $('ptVal').textContent=`${done}/9`; $('prLbl').textContent=pct+'%';
+  const circ=2*Math.PI*15; $('prFill').style.strokeDashoffset=circ-(pct/100)*circ;
   const diffs=Object.values(S.entries).map(e=>avg2(e.aft)-avg2(e.bef)).filter(Boolean);
   const avgD=diffs.length?diffs.reduce((s,v)=>s+v,0)/diffs.length:null;
   const p=$('avgPill');
@@ -816,7 +850,7 @@ function buildExportHTML(){
     html+=`<p><span class="label">Bewertung vorher:</span> Haut ${e.bef?.haut||0}/5 <span class="stars">${'★'.repeat(e.bef?.haut||0)}</span>, Wohlgefühl ${e.bef?.wohl||0}/5 <span class="stars">${'★'.repeat(e.bef?.wohl||0)}</span></p>`;
     html+=`<p><span class="label">Bewertung nachher:</span> Haut ${e.aft?.haut||0}/5 <span class="stars">${'★'.repeat(e.aft?.haut||0)}</span>, Wohlgefühl ${e.aft?.wohl||0}/5 <span class="stars">${'★'.repeat(e.aft?.wohl||0)}</span></p>`;
     
-    // Note
+// Note
     if(e.note){html+=`<p><span class="label">Beobachtung:</span><br/>${e.note.replace(/\n/g,'<br/>')}</p>`;}
     
     html+=`</div>`;
